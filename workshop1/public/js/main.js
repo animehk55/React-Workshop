@@ -1,21 +1,23 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
+import React from "react";
+import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 
-import store from './stores/configureStore'
-import Conversion from './containers/conversion.js';
-
-
+import store from "./stores/configureStore";
+import Conversion from "./containers/Conversion";
 
 class MainComponent extends React.Component {
-    render() {
-        return (
-            <div>
-                <Conversion />
-            </div>
-        )
-    }
+  render() {
+    return (
+      <div>
+        <Conversion />
+      </div>
+    );
+  }
 }
 
-
-ReactDOM.render(<Provider store={store}><MainComponent /></Provider>, document.getElementById('container'));
+ReactDOM.render(
+  <Provider store={store}>
+    <MainComponent />
+  </Provider>,
+  document.getElementById("container")
+);
