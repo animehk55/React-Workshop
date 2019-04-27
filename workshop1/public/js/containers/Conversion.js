@@ -4,6 +4,7 @@ import axios from 'axios';
 import debounce from 'lodash.debounce';
 
 import FeesTable from '../components/FeesTable';
+import * as actions from '../actions/actions';
 
 class Conversion extends React.Component {
     constructor(props) {
@@ -11,10 +12,10 @@ class Conversion extends React.Component {
         this.state = {
             // originAmount: '0.00',
             originCurrency: 'USD',
-            destinationAmount: '0.00',
+            // destinationAmount: '0.00',
             destinationCurrency: 'EUR',
             feeAmount: 0.00,
-            conversionRate: 1.5,
+            // conversionRate: 1.5,
             totalCost: 0.00,
             errorMsg: ''
         }
@@ -74,7 +75,7 @@ class Conversion extends React.Component {
                 this.setState({
                     originAmount: resp.originAmount,
                     // destinationAmount: resp.destAmount,
-                    destinationAmount: this.state.destinationAmount,
+                    destinationAmount: this.props.destinationAmount,
                     conversionRate: resp.xRate
                 });
 
@@ -105,37 +106,24 @@ class Conversion extends React.Component {
         newAmount = newAmount.replace(',','')
 
         // optimistic field updates
-        this.props.dispatch({type:"CHANGE_ORIGIN_AMOUNT", data:{newAmount: newAmount} });
-        // this.setState({originAmount: newAmount});
+        this.props.dispatch(actions.changeOriginAmount(newAmount));
 
-        // get the new dest amount
-        this.makeConversionAjaxCall({
-            currentlyEditing: 'origin',
-            newValue: newAmount
+        var payload = {
+            originAmount: newAmount,
+            originCurrency: this.state.originCurrency,
+            destCurrency: this.state.destinationCurrency,
+            calcOriginAmount: false
+        }
 
-        }, (resp) => {
-            this.clearErrorMessage();
+        this.props.dispatch(actions.fetchConversionRate(payload));
 
-            this.setState({
-                conversionRate: resp.xRate,
-                destinationAmount: resp.destAmount
-            })
-        }, this.handleAjaxFailure);
-
-        // get the new fee & total amount
-        this.makeFeeAjaxCall({
+        var feePayload = {
             originAmount: newAmount,
             originCurrency: this.state.originCurrency,
             destCurrency: this.state.destinationCurrency
+        }
 
-        }, (resp) => {
-            this.setState({
-                feeAmount: resp.feeAmount
-            })
-
-            this.calcNewTotal();
-        });
-
+        this.props.dispatch(actions.fetchFees(feePayload));
 
     }
     handleDestAmountChange(event) {
@@ -234,7 +222,7 @@ class Conversion extends React.Component {
                     <option value="EUR">EUR</option>
                     <option value="JPY">JPY</option>
                 </select>
-                to <input className="amount-field" onChange={this.handleDestAmountChange} value={this.state.destinationAmount} />&nbsp;
+                to <input className="amount-field" onChange={this.handleDestAmountChange} value={this.props.destinationAmount} />&nbsp;
                 <select value={this.state.destinationCurrency} onChange={this.handleDestCurrencyChange}>
                     <option value="USD">USD</option>
                     <option value="EUR">EUR</option>
@@ -246,9 +234,9 @@ class Conversion extends React.Component {
                 <FeesTable
                     originCurrency={this.state.originCurrency}
                     destinationCurrency={this.state.destinationCurrency}
-                    conversionRate={this.state.conversionRate}
-                    fee={this.state.feeAmount}
-                    total={this.state.totalCost}
+                    conversionRate={this.props.conversionRate}
+                    fee={this.props.feeAmount}
+                    total={this.props.totalCost}
                 />
             </div>
         )
@@ -257,7 +245,11 @@ class Conversion extends React.Component {
 
 export default connect((state, props) => {
     return {
-        originAmount: state.originAmount
+        originAmount: state.originAmount,
+        destinationAmount: state.destinationAmount,
+        conversionRate: state.conversionRate,
+        feeAmount: state.feeAmount,
+        totalCost: state.totalCost
     }
 
 })(Conversion);

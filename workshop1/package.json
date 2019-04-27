@@ -1,5 +1,5 @@
 {
-  "name": "workshop2",
+  "name": "pl_redux",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -23,12 +23,15 @@
     "babel-preset-react": "^6.23.0",
     "babel-preset-stage-3": "^6.24.1",
     "concurrently": "^2.0.0",
+    "keymirror": "^0.1.1",
     "lodash.debounce": "^4.0.3",
     "prop-types": "15.5.8",
     "react": "16.0.0",
     "react-dom": "16.0.0",
     "react-redux": "5.0.6",
     "redux": "3.6.0",
+    "redux-logger": "3.0.6",
+    "redux-thunk": "2.2.0",
     "webpack": "2.4.1"
   }
 }
