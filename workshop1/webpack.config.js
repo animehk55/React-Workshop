@@ -6,6 +6,7 @@ module.exports = {
 	filename: "bundle.js",
 	path: path.resolve(__dirname, 'public/js/build')
     },
+    devtool: "source-map",
     module: { // Loaders apply transformations before a file is added to bundle.js
 	loaders: [
 	    {
@@ -13,7 +14,7 @@ module.exports = {
 		exclude: /node_modules/, // except for node_modules
 		loader: 'babel-loader', // apply the babel-loader to compile the files
 		query: {
-		    presets: ['react', 'es2015'] // load the react, es2015 babel settings
+		    presets: ['react', 'es2015', 'stage-3'] // load the react, es2015 babel settings
 		}
 	    }
 	]
