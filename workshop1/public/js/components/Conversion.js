@@ -273,7 +273,6 @@ class Conversion extends React.Component {
                     <option value="JPY">JPY</option>
                 </select>
 
-
                 <br/><br/><br/>
                 <FeesTable
                     originCurrency={this.state.originCurrency}
